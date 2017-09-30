@@ -1,5 +1,5 @@
 
-import pymongo
+# import pymongo
 from flask import Flask, flash, redirect, render_template, request, session, abort
 app = Flask(__name__)
 
@@ -15,13 +15,13 @@ app = Flask(__name__)
 
 @app.route("/")
 @app.route("/index")
-def hello():
+def index():
     return render_template("index.html")
 
 @app.route("/add_stock", methods=["POST"])
-def add_stock(data):
-	# TODO: add pymongo stuff
-	return "SUCCESS"
+def add_stock():
+    print(request.form)
+    return ""
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=8000)
