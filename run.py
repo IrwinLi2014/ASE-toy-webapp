@@ -21,7 +21,9 @@ mongo = PyMongo(app)
 @app.route("/")
 @app.route("/index")
 def index():
-    return render_template("index.html")
+    stocks = mongo.db.stocks # create a collection called stocks
+    output = [stock["ticker"] for stock in stocks.find()]
+    return render_template("index.html", stocks=output)
 
 @app.route("/add_stock", methods=["POST"])
 def add_stock():
@@ -30,11 +32,8 @@ def add_stock():
     ticker = request.form["ticker"]
     ticker_id = stocks.insert({"ticker": ticker})
 
-    output=[]
-    for s in stocks.find():
-        output.append({'ticker':s['ticker']})
-    
-    return jsonify({'result': output})
+    output = [stock["ticker"] for stock in stocks.find()]
+    return ",".join(output)
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=8000)
