@@ -1,8 +1,13 @@
 
-# import pymongo
-from flask import Flask, flash, redirect, render_template, request, session, abort
+
+from flask import Flask, flash, redirect, render_template, request, session, abort, jsonify
+from flask_pymongo import PyMongo
 app = Flask(__name__)
 
+app.config['MONGO_DBNAME']='toydb'
+app.config['MONGO_URI'] = 'mongodb://localhost:27017/toydb'
+
+mongo = PyMongo(app)
 """
 1.  Programming languages: Python, HTML, JavaScript
 2.  Web Development Application Framework: Flask
@@ -20,8 +25,16 @@ def index():
 
 @app.route("/add_stock", methods=["POST"])
 def add_stock():
-    print(request.form)
-    return ""
+    print(request.form["ticker"])
+    stocks = mongo.db.stocks # create a collection called stocks
+    ticker = request.form["ticker"]
+    ticker_id = stocks.insert({"ticker": ticker})
+
+    output=[]
+    for s in stocks.find():
+        output.append({'ticker':s['ticker']})
+    
+    return jsonify({'result': output})
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=8000)
