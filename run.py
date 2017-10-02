@@ -1,9 +1,8 @@
 
-
-from flask import Flask, flash, redirect, render_template, request, session, abort, jsonify, current_app
+from flask import Flask, flash, redirect, render_template, request, session, abort, jsonify
 from flask_pymongo import PyMongo
 app = Flask(__name__)
-with app.app_context():
+
 
 app.config['MONGO_DBNAME']='toydb'
 app.config['MONGO_URI'] = 'mongodb://localhost:27017/toydb'
@@ -42,6 +41,10 @@ def check_stock(s):
         if s == stock:
             return True
     return False
+def count():
+    stocks = mongo.db.stocks
+    return stocks.count()
+
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=8000)
